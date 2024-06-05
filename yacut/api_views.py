@@ -11,10 +11,9 @@ from .constants import REGEXP
 
 @app.route('/api/id/', methods=['POST'])
 def create_id():
-    try:
-        data = request.get_json()
-    except:
+    if not request.data:
         raise InvalidAPIUsage('Отсутствует тело запроса')
+    data = request.get_json()
     if 'url' not in data:
         raise InvalidAPIUsage('\"url\" является обязательным полем!')
     short_id = data.get('custom_id')
@@ -27,7 +26,9 @@ def create_id():
     if (
             URLMap.query.filter_by(short=short_id).first() is not None
     ):
-        raise InvalidAPIUsage('Предложенный вариант короткой ссылки уже существует.')
+        raise InvalidAPIUsage(
+            'Предложенный вариант короткой ссылки уже существует.'
+        )
     url_map = URLMap(original=data['url'], short=short_id)
     db.session.add(url_map)
     db.session.commit()

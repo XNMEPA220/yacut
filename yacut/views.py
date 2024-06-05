@@ -1,6 +1,7 @@
-import random, string
+import random
+import string
 
-from flask import render_template, abort, redirect, url_for, flash
+from flask import render_template, abort, redirect, flash
 
 from .models import URLMap
 from .forms import URLForm
@@ -12,6 +13,7 @@ def get_unique_short_id():
     if URLMap.query.filter_by(short=short_id).first() is not None:
         return get_unique_short_id()
     return short_id
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index_view():
@@ -30,6 +32,7 @@ def index_view():
         return render_template('yacut.html', short_id=short_id, form=form)
     return render_template('yacut.html', form=form)
 
+
 @app.route('/<short_id>')
 def redirect_to_full_url(short_id):
     url_map = URLMap.query.filter_by(short=short_id).first()
@@ -37,4 +40,3 @@ def redirect_to_full_url(short_id):
         abort(404)
     original_link = url_map.original
     return redirect(original_link)
-
