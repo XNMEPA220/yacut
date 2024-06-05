@@ -1,0 +1,2 @@
+MAX_LENGTH_OF_SHORT_URL = 16
+REGEXP = r'^[a-zA-Z0-9]+$'
